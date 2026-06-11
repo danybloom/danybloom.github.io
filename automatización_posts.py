@@ -3,18 +3,17 @@ import os
 
 def generar_entrada_blog(titulo, categoria, contenido_texto):
     # 1. Obtener la fecha actual en los formatos que Jekyll necesita
-    fecha_hoy = datetime.now().strftime("%Y-%m-%d") # Ej: 2026-06-11
+    fecha_hoy = datetime.now().strftime("%Y-%m-%d")
     fecha_completa = datetime.now().strftime("%Y-%m-%d %H:%M:%S -0600")
     
-    # 2. Convertir el título en formato de archivo (Minúsculas y con guiones)
-    # Ejemplo: "Mi Post Increíble" -> "mi-post-increible"
+    # 2. Convertir el título en formato de archivo
     titulo_limpio = titulo.lower().replace(" ", "-")
     nombre_archivo = f"{fecha_hoy}-{titulo_limpio}.md"
     ruta_final = f"_posts/{nombre_archivo}"
     
-    # 3. Validar si la carpeta _posts existe por seguridad
+    # 3. Validar si la carpeta _posts existe
     if not os.path.exists("_posts"):
-        print("Error: No se encontró la carpeta _posts. Asegúrate de ejecutar el script en la raíz de tu blog.")
+        print("Error: No se encontró la carpeta _posts.")
         return
 
     # 4. Estructura Front Matter (YAML) + Contenido
@@ -28,21 +27,30 @@ tags: [Automatizado]
 {contenido_texto}
 """
 
-    # 5. Escribir el archivo en el disco duro
+    # 5. Escribir el archivo final .md
     with open(ruta_final, "w", encoding="utf-8") as archivo:
         archivo.write(plantilla_markdown)
         
     print(f"🚀 ¡Éxito! Post creado en: {ruta_final}")
 
-# ==========================================
-# 🎯 PRUEBA DE LA MÁQUINA: Escribe aquí tu contenido
-# ==========================================
-mi_titulo = "Entrada creada desde Python"
-mi_categoria = "Programación"
-mi_contenido = """¡Hola! Este es un experimento genial. 
-Acabo de crear este post ejecutando un script de Python que genera el archivo Markdown automáticamente.
 
-Pronto seré un estudiante de Ingeniería en Tecnologías de la Información e Innovación Digital y esto es solo el comienzo."""
+# ========================================================
+# 🎯 NUEVA SECCIÓN: LEVANTAR ARCHIVO TEXTO
+# ========================================================
+print("=== CREADOR DE POSTS DESDE ARCHIVO LOCAL ===")
 
-# Llamamos a la función
-generar_entrada_blog(mi_titulo, mi_categoria, mi_contenido)
+mi_titulo = input("✍️  Escribe el título de tu nuevo post: ")
+mi_categoria = input("📁 Escribe la categoría: ")
+nombre_nota = input("📄 Escribe el nombre de tu archivo (ej. nota.txt): ")
+
+# Intentamos abrir el archivo que nos indicaste
+try:
+    with open(nombre_nota, "r", encoding="utf-8") as archivo_origen:
+        # Leemos todo el bloc de notas completo y lo guardamos en la variable
+        mi_contenido = archivo_origen.read()
+    
+    # Si todo sale bien, la función fabrica el post del blog
+    generar_entrada_blog(mi_titulo, mi_categoria, mi_contenido)
+
+except FileNotFoundError:
+    print(f"❌ Error: No se encontró el archivo '{nombre_nota}'. Asegúrate de que esté en la misma carpeta que este script.")
